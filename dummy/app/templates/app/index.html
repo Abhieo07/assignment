@@ -1,0 +1,109 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>DummyNews app</title>
+        <meta charset="UTF-8">
+        <meta name="description" content="Free Web tutorials">
+        <meta name="keywords" content="HTML, CSS, JavaScript">
+        <meta name="author" content="John Doe">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <style>
+          h1 {
+            text-align: center;
+            margin: auto;
+            padding: 10px;
+
+          }
+          body {
+            text-align: center;
+            background-color: aqua;
+          }
+          .news {
+            border-radius: 25px;
+            background: aquamarine;
+            height: 95%;
+            position: relative;
+            }
+            #content {
+                border-radius: 25px;
+            text-align: center;
+            background: gray;
+            height: 65%;
+            position: relative;
+            margin: auto;
+            padding: auto;
+            
+            }
+        </style>
+        <script>
+
+            window.onpopstate = function(event) {
+                console.log(event.state.section)
+                showSection(event.state.section)
+            }
+
+            function showSection(section) {
+
+                fetch(`/section/${section}`)
+                .then(response => response.text())
+                .then(text => {
+                    console.log(text);
+                    document.querySelector("#content").innerHTML=text
+                });
+            }
+       
+            document.addEventListener('DOMContentLoaded', function() {
+                document.querySelectorAll('.news').forEach(Image => {
+                    Image.onclick = function() {
+                        const section = this.dataset.section
+                        history.pushState({section: section}, "Single Page App", `news${section}`)
+                        showSection(section);
+                        clear(section)
+                    }
+                })
+            })
+
+
+            function clear(int) {
+                const clearImages = document.querySelectorAll(".news");
+
+                clearImages.forEach(clearImage => {
+                    if(clearImage.id != int) {
+                        clearImage.innerHTML=""
+                        //let sc = parseInt(clearImage.id) + 1
+                        //clearImage.innerHTML=""//.remove() can be better
+
+                    }
+	            });
+            }
+
+        </script>
+    </head>
+    <body>
+        <h1>Dummy News!</h1>
+        <div class="newses">
+            <div data-section="1" class="news" id="1"><img src="{% static 'app/media/news1.png' %}" alt="News 1" onclick="clear('1')">
+                <h2>PayPal enables transfer of digital currencies to external wallets</h2>
+                
+            </div>
+            <div data-section="2" class="news" id="2"><img src="{% static 'app/media/news2.png' %}" alt="News 2">
+                <h2>Italian Parliament Approves 26% Crypto-Gains Tax in 2023 Budget</h2>
+                <div id="2" class="text"></div>
+            </div>
+            <div data-section="3" class="news" id="3">
+                <h2 id="special"> Microstrategy Buys More Bitcoin — Company's Crypto Holdings Grow to 132,500 BTC</h2>
+                <div id="3" class="text"></div>
+            </div>
+            <div data-section="4" class="news" id="4"><img src="{% static 'app/media/news4.png' %}" alt="News 4">
+                <h2>Bitcoin Miners’ Revenue Hits $9.55 Billion in 2022</h2>
+                <div id="4" class="text"></div>
+            </div>
+            <div data-section="5" class="news" id="5"><img src="{% static 'app/media/news5.png' %}" alt="News 5">
+                <h2>Mango Markets Exploiter Eisenberg Arrested in Puerto Rico</h2>
+                <div id="5" class="text"></div>
+            </div>
+        </div>
+        <div id="content"></div>
+    </body> 
+</html>
